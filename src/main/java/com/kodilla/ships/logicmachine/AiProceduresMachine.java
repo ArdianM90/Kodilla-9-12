@@ -1,5 +1,6 @@
 package com.kodilla.ships.logicmachine;
 
+import com.kodilla.ships.AiSquare;
 import com.kodilla.ships.SingleSquare;
 import javafx.scene.paint.Color;
 
@@ -10,9 +11,9 @@ public class AiProceduresMachine {
     private final int[] SHIPS_EXPECTED_QUANTITY;
     private final int[] floatingPlayerShips;
     private final List<List<SingleSquare>> PLAYER_SQUARES_2D_LIST;
-    private final List<List<SingleSquare>> AI_SQUARES_2D_LIST;
+    private final List<List<AiSquare>> AI_SQUARES_2D_LIST;
 
-    public AiProceduresMachine(int[] shipsExpectedQuantity, List<List<SingleSquare>> playerSquares2DList, List<List<SingleSquare>> aiSquares2DList) {
+    public AiProceduresMachine(int[] shipsExpectedQuantity, List<List<SingleSquare>> playerSquares2DList, List<List<AiSquare>> aiSquares2DList) {
         this.SHIPS_EXPECTED_QUANTITY = shipsExpectedQuantity;
         this.PLAYER_SQUARES_2D_LIST = playerSquares2DList;
         this.AI_SQUARES_2D_LIST = aiSquares2DList;
@@ -87,7 +88,7 @@ public class AiProceduresMachine {
             int j = yGrid-1;
             while ((!redHasBeenFound) && (j < yGrid+2)) {
                 if (i >= 0 && j >= 0 && i < AI_SQUARES_2D_LIST.size() && j < AI_SQUARES_2D_LIST.get(0).size()) {
-                    if (AI_SQUARES_2D_LIST.get(i).get(j).getColor().equals(Color.RED)) {
+                    if (AI_SQUARES_2D_LIST.get(i).get(j).isShip()) {
                         redHasBeenFound = true;
                     }
                 }
@@ -101,9 +102,9 @@ public class AiProceduresMachine {
     private void setShip(int xGrid, int yGrid, int length, boolean horizontalOrient) {
         for (int i = 0; i < length; i++) {
             if (horizontalOrient) {
-                AI_SQUARES_2D_LIST.get(xGrid+i).get(yGrid).setColorRed();
+                AI_SQUARES_2D_LIST.get(xGrid+i).get(yGrid).setShip();
             } else {
-                AI_SQUARES_2D_LIST.get(xGrid).get(yGrid+i).setColorRed();
+                AI_SQUARES_2D_LIST.get(xGrid).get(yGrid+i).setShip();
             }
         }
     }

@@ -24,61 +24,65 @@ public class FiringComputer {
         MAX_Y = playerSquares2DList.get(0).size() - 1;
     }
 
-    public boolean fireAt() { //zwraca true/false - jezeli strzal jest trafiony
-        System.out.println("Komputer losuje kwadrat i strzela.");
-        Random rnd = new Random();
-        System.out.println("prevShotX: " + prevShotX + ", prevAccurShotX: " + prevAccurShotX);
-        if (prevShotX == -1 || prevAccurShotX == -1) { //wykonuje strzal na slepo (pierwszy, lub po resecie)
-            return blindShoot();
-        } else { //kontynuję strzelanie po celnym strzale
-            if (hasRedAndShotAround(prevAccurShotX, prevAccurShotY)) {
+    public boolean fireAt() { //zwraca true jezeli strzal jest celny
+        if (prevAccurShotX != -1) { //byl juz oddany celny strzal
+            if (hasRedAndShotAround(prevAccurShotX, prevAccurShotY) && stillFloatShipsLongerThan(2)) {
                 if (hasRedAndShotHorizontal(prevAccurShotX, prevAccurShotY)) {
                     System.out.println("Mysle jak strzelic w poziomie.");
-                    System.out.println();
                     System.out.println("Ostatnio trafilem w: x " + prevAccurShotX + ", y " + prevAccurShotY);
                     System.out.println("Jak do tej pory, dlugość trafionego statku wynosi: " + redAndShotHorizontalCounter(prevAccurShotX, prevAccurShotY));
-                    computeShotHorizontal(prevAccurShotX, prevAccurShotY);
-                    //sprawdzam w lewo
-                    //jak moge strzelic to strzelam
-                    //sprawdzam w prawo
-                    //jak moge to strzelam
+                    System.out.println();
+                    if (computeShotHorizontal(prevAccurShotX, prevAccurShotY)) {
+                        return prevShotWasAccurate;
+                    } else {
+                        return blindShoot();
+                    }
                 } else if (hasRedAndShotVertical(prevAccurShotX, prevAccurShotY)) {
                     System.out.println("Mysle jak strzelic w pionie.");
-                    System.out.println();
                     System.out.println("Ostatnio trafilem w: x " + prevAccurShotX + ", y " + prevAccurShotY);
                     System.out.println("Jak do tej pory, długość trafionego statku wynosi: " + redAndShotVerticalCounter(prevAccurShotX, prevAccurShotY));
-                    computeShotVertical(prevAccurShotX, prevAccurShotY);
-                    //sprawdzam w gore
-                    //jak moge strzelic to strzelam
-                    //sprawdzam w dol
-                    //jak moge to strzelam
+                    System.out.println();
+                    if (computeShotVertical(prevAccurShotX, prevAccurShotY)) {
+                        return prevShotWasAccurate;
+                    } else {
+                        return blindShoot();
+                    }
                 }
-            } else { //strzelam naokoło
-                System.out.println("Trafilem. Mysle jak strzelic naokolo.");
-                System.out.println();
-                int[] xGridsAround = {prevAccurShotX, prevAccurShotX - 1, prevAccurShotX + 1, prevAccurShotX};
-                int[] yGridsAround = {prevAccurShotY + 1, prevAccurShotY, prevAccurShotY, prevAccurShotY - 1};
-                boolean cantShootHere = true;
-                int choice = -1;
-                while (cantShootHere) {
-                    choice = rnd.nextInt(4);
-                    cantShootHere = playerSquares2DList.get(xGridsAround[choice]).get(yGridsAround[choice]).isHit();
-                    //co w przypadku gdy wszystkie 4 naokolo sa ustrzelone???
+            } else if (stillFloatShipsLongerThan(1)) { //strzelam naokoło
+                int x;
+                int y;
+                if (!playerSquares2DList.get(prevAccurShotX).get(prevAccurShotY+1).isHit()) {
+                    x = prevAccurShotX;
+                    y = prevAccurShotY+1;
+                } else if (!playerSquares2DList.get(prevAccurShotX-1).get(prevAccurShotY).isHit()) {
+                    x = prevAccurShotX-1;
+                    y = prevAccurShotY;
+                } else if (!playerSquares2DList.get(prevAccurShotX+1).get(prevAccurShotY).isHit()) {
+                    x = prevAccurShotX+1;
+                    y = prevAccurShotY;
+                } else if (!playerSquares2DList.get(prevAccurShotX).get(prevAccurShotY-1).isHit()) {
+                    x = prevAccurShotX;
+                    y = prevAccurShotY-1;
+                } else {
+                    return blindShoot();
                 }
-                SingleSquare playerSquare = playerSquares2DList.get(xGridsAround[choice]).get(yGridsAround[choice]);
+                SingleSquare playerSquare = playerSquares2DList.get(x).get(y);
                 if (playerSquare.getColor().equals(Color.RED)) {
-                    prevAccurShotX = xGridsAround[choice];
-                    prevAccurShotY = yGridsAround[choice];
+                    prevAccurShotX = x;
+                    prevAccurShotY = y;
                     prevShotWasAccurate = true;
                     playerSquare.cross();
                     return true;
                 } else {
+                    prevShotX = x;
+                    prevShotY = y;
+                    prevShotWasAccurate = false;
                     playerSquare.setColorBlack();
                     return false;
                 }
             }
         }
-        return false;
+        return blindShoot(); //wykonuje strzal na slepo
     }
 
     private int redAndShotHorizontalCounter(int prevAccurShotX, int y) {
@@ -104,7 +108,7 @@ public class FiringComputer {
         return counter;
     }
 
-    private boolean computeShotHorizontal(int prevAccurShotX, int y) {
+    private boolean computeShotHorizontal(int prevAccurShotX, int y) { //zwraca false, jezeli NIE wykona strzalu
         int x = prevAccurShotX;
         boolean goCheckNext = true;
         while (x - 1 >= 0 && goCheckNext) {
@@ -124,34 +128,39 @@ public class FiringComputer {
                 goCheckNext = false;
             }
         }
+        System.out.println("COUNTER wynosi: "+counter);
         if (x + 1 < playerSquares2DList.size()) { //probuje strzelic po prawej
             SingleSquare targetSquare = playerSquares2DList.get(x + 1).get(y);
             if (!targetSquare.isHit()) {
                 if (targetSquare.getColor().equals(Color.RED)) {
-                    prevAccurShotX = x;
-                    prevAccurShotY = y + 1;
+                    prevAccurShotX = x + 1;
+                    prevAccurShotY = y;
                     prevShotWasAccurate = true;
                     targetSquare.cross();
-                    return true;
                 } else {
+                    prevShotX = x + 1;
+                    prevShotY = y;
+                    prevShotWasAccurate = false;
                     targetSquare.setColorBlack();
-                    return false;
                 }
+                return true;
             }
         }
         if (x - counter >= 0) { //probuje strzelic po lewej
             SingleSquare targetSquare = playerSquares2DList.get(x - counter).get(y);
             if (!targetSquare.isHit()) {
                 if (targetSquare.getColor().equals(Color.RED)) {
-                    prevAccurShotX = x;
-                    prevAccurShotY = y + 1;
+                    prevAccurShotX = x - counter;
+                    prevAccurShotY = y;
                     prevShotWasAccurate = true;
                     targetSquare.cross();
-                    return true;
                 } else {
+                    prevShotX = x - counter;
+                    prevShotY = y;
+                    prevShotWasAccurate = false;
                     targetSquare.setColorBlack();
-                    return false;
                 }
+                return true;
             }
         }
         return false;
@@ -180,7 +189,7 @@ public class FiringComputer {
         return counter;
     }
 
-    private boolean computeShotVertical(int x, int prevAccurShotY) {
+    private boolean computeShotVertical(int x, int prevAccurShotY) { //zwraca false, jezeli NIE wykona strzalu
         int y = prevAccurShotY;
         boolean goCheckNext = true;
         while (y-1 >= 0 && goCheckNext) { //przesuwam X maksymalnie w lewo
@@ -200,33 +209,49 @@ public class FiringComputer {
                 goCheckNext = false;
             }
         }
-        if (y+1 < playerSquares2DList.get(x).size()) { //probuje strzelic wyzej
+        System.out.println("COUNTER wynosi: "+counter);
+        if (y+1 < playerSquares2DList.get(x).size()) { //probuje strzelic nizej
             SingleSquare targetSquare = playerSquares2DList.get(x).get(y+1);
             if (!targetSquare.isHit()) {
                 if (targetSquare.getColor().equals(Color.RED)) {
                     prevAccurShotX = x;
-                    prevAccurShotY = y+1;
+                    prevAccurShotY = y + 1;
                     prevShotWasAccurate = true;
                     targetSquare.cross();
-                    return true;
                 } else {
+                    prevShotX = x;
+                    prevShotY = y + 1;
+                    prevShotWasAccurate = false;
                     targetSquare.setColorBlack();
-                    return false;
                 }
+                return true;
             }
         }
-        if (y-counter >= 0) { //probuje strzelic nizej
+        if (y-counter >= 0) { //probuje strzelic wyzej
             SingleSquare targetSquare = playerSquares2DList.get(x).get(y-counter);
             if (!targetSquare.isHit()) {
                 if (targetSquare.getColor().equals(Color.RED)) {
                     prevAccurShotX = x;
-                    prevAccurShotY = y+1;
+                    prevAccurShotY = y-counter;
                     prevShotWasAccurate = true;
                     targetSquare.cross();
-                    return true;
                 } else {
+                    prevShotX = x;
+                    prevShotY = y-counter;
+                    prevShotWasAccurate = false;
                     targetSquare.setColorBlack();
-                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean stillFloatShipsLongerThan(int length) {
+        if (length < floatingPlayerShipsQuantity.length) {
+            for (int i = length; i < floatingPlayerShipsQuantity.length; i++) {
+                if (floatingPlayerShipsQuantity[i] > 0) {
+                    return true;
                 }
             }
         }
@@ -261,26 +286,23 @@ public class FiringComputer {
     }
 
     private boolean blindShoot() {
-        System.out.println("Wykonuję strzal na slepo (pierwszy, lub po resecie).");
-        System.out.println();
-        //dodać przypadek trafienia w trafione miejsce
         Random rnd = new Random();
-        boolean cantShootHere = true;
-        while (cantShootHere) {
+        boolean noNeedToShootHere = true;
+        while (noNeedToShootHere) {
             prevShotX = rnd.nextInt(MAX_X);
             prevShotY = rnd.nextInt(MAX_Y);
-            cantShootHere = hasRedAndShotAround(prevShotX, prevShotY);
+            noNeedToShootHere = hasRedAndShotAround(prevShotX, prevShotY) || playerSquares2DList.get(prevShotX).get(prevShotY).isHit();
         }
         SingleSquare playerSquare = playerSquares2DList.get(prevShotX).get(prevShotY);
         if (playerSquare.getColor().equals(Color.RED)) {
             prevAccurShotX = prevShotX;
             prevAccurShotY = prevShotY;
-            prevShotWasAccurate = true;
             playerSquare.cross();
-            return true;
+            prevShotWasAccurate = true;
         } else {
             playerSquare.setColorBlack();
-            return false;
+            prevShotWasAccurate = false;
         }
+        return prevShotWasAccurate;
     }
 }

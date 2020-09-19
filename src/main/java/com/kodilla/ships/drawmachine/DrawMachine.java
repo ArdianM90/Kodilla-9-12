@@ -1,5 +1,6 @@
 package com.kodilla.ships.drawmachine;
 
+import com.kodilla.ships.AiSquare;
 import com.kodilla.ships.SingleSquare;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
@@ -12,7 +13,7 @@ public class DrawMachine {
     private final int RECTS_IN_ROW;
     private final int RECTS_IN_COLUMN;
     List<List<SingleSquare>> playerSquares2DList = new ArrayList<>();
-    List<List<SingleSquare>> aiSquares2DList = new ArrayList<>();
+    List<List<AiSquare>> aiSquares2DList = new ArrayList<>();
 
     public DrawMachine(int rectsInRow, int rectsInColumn) {
         this.RECTS_IN_ROW = rectsInRow;
@@ -31,12 +32,12 @@ public class DrawMachine {
 
         for (int i = 0; i < RECTS_IN_COLUMN; i++) {
             List<SingleSquare> playerSquaresInRowList = new ArrayList<>();
-            List<SingleSquare> aiSquaresInRowList = new ArrayList<>();
+            List<AiSquare> aiSquaresInRowList = new ArrayList<>();
             for (int j = 0; j < RECTS_IN_ROW; j++) {
                 SingleSquare playerSquare = new SingleSquare(50, 50);
                 playerSquaresInRowList.add(playerSquare);
                 playerBoard.add(playerSquare.getSquare(), i, j);
-                SingleSquare aiSquare = new SingleSquare(50, 50);
+                AiSquare aiSquare = new AiSquare(50, 50);
                 aiSquaresInRowList.add(aiSquare);
                 aiBoard.add(aiSquare.getSquare(), i, j);
             }
@@ -54,7 +55,7 @@ public class DrawMachine {
         return this.playerSquares2DList;
     }
 
-    public List<List<SingleSquare>> getAiSquares2DList() {
+    public List<List<AiSquare>> getAiSquares2DList() {
         return this.aiSquares2DList;
     }
 }

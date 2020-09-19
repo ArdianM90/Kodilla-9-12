@@ -7,9 +7,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class SingleSquare {
-    private final StackPane STACK_PANE;
-    private final Rectangle SQUARE;
-    private boolean isHit = false;
+    protected final StackPane STACK_PANE;
+    protected final Rectangle SQUARE;
+    protected boolean isHit = false;
 
     public SingleSquare(int width, int height) {
         this.STACK_PANE = new StackPane();
@@ -44,6 +44,7 @@ public class SingleSquare {
 
     public void setColorBlack() {
         SQUARE.setFill(Color.BLACK);
+        isHit = true;
     }
 
     public StackPane getSquare() {
@@ -53,5 +54,4 @@ public class SingleSquare {
     public Paint getColor() {
         return SQUARE.getFill();
     }
-
 }

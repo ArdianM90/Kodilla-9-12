@@ -22,7 +22,7 @@ public class ShipsGame extends Application {
     private final int RECTS_IN_COLUMN;
     private final int[] SHIPS_QUANTITY;
     private List<List<SingleSquare>> playerSquares2DList;
-    private List<List<SingleSquare>> aiSquares2DList;
+    private List<List<AiSquare>> aiSquares2DList;
     private AiProceduresMachine aiMachine;
     private int playerFloatingSquares;
     private int aiFloatingSquares;
@@ -92,33 +92,38 @@ public class ShipsGame extends Application {
         }
         for (int i = 0; i < RECTS_IN_ROW; i++) {
             for (int j = 0; j < RECTS_IN_COLUMN; j++) {
-                clearCLickAction(playerSquares2DList);
-                SingleSquare aiSquare = aiSquares2DList.get(i).get(j);
+                playerSquares2DList.forEach(e -> e.forEach(f -> f.getSquare().setOnMouseClicked(event -> {})));
+                AiSquare aiSquare = aiSquares2DList.get(i).get(j);
                 aiSquare.getSquare().setOnMouseClicked(event -> {
                     if (userInterface.fireAt(aiSquare)) { //strzela gracz. FireAt() zwraca true, przy tafieniu w statek
                         aiFloatingSquares -= 1;
                         if (aiFloatingSquares == 0) {
-                            clearCLickAction(aiSquares2DList);
-                            System.out.println("WYGRYWASZ!!!");
-                            //przejście do ekranu z podsumowaniem
+                            aiSquares2DList.forEach(e -> e.forEach(f -> f.getSquare().setOnMouseClicked(event2 -> {})));
+                            Alert endInfo = new Alert(Alert.AlertType.INFORMATION);
+                            endInfo.setTitle("Koniec gry");
+                            endInfo.setHeaderText(null);
+                            endInfo.setContentText("WYGRYWASZ!!!");
+                            endInfo.showAndWait();
                         }
                     }
                     if (aiFloatingSquares > 0) {
                         if (firingMachine.fireAt()) {
                             playerFloatingSquares -= 1;
+                            System.out.println("==========");
+                            System.out.println("Zostalo ci "+playerFloatingSquares+" statkow.");
+                            System.out.println("==========");
                             if (playerFloatingSquares == 0) {
-                                clearCLickAction(aiSquares2DList);
-                                System.out.println("PRZEGRYWASZ!!!");
-                                //przejście do ekranu z podsumowaniem
+                                aiSquares2DList.forEach(e -> e.forEach(f -> f.getSquare().setOnMouseClicked(event2 -> {})));
+                                Alert endInfo = new Alert(Alert.AlertType.INFORMATION);
+                                endInfo.setTitle("Koniec gry");
+                                endInfo.setHeaderText(null);
+                                endInfo.setContentText("PRZEGRYWASZ!!!");
+                                endInfo.showAndWait();
                             }
                         }
                     }
                 });
             }
         }
-    }
-
-    private void clearCLickAction(List<List<SingleSquare>> squaresToClear) {
-        squaresToClear.forEach(e -> e.forEach(f -> f.getSquare().setOnMouseClicked(event -> {})));
     }
 }
