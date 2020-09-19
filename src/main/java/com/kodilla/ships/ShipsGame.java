@@ -104,6 +104,7 @@ public class ShipsGame extends Application {
                             endInfo.setHeaderText(null);
                             endInfo.setContentText("WYGRYWASZ!!!");
                             endInfo.showAndWait();
+                            System.exit(0);
                         }
                     }
                     if (aiFloatingSquares > 0) {
@@ -119,6 +120,7 @@ public class ShipsGame extends Application {
                                 endInfo.setHeaderText(null);
                                 endInfo.setContentText("PRZEGRYWASZ!!!");
                                 endInfo.showAndWait();
+                                System.exit(0);
                             }
                         }
                     }
