@@ -1,8 +1,7 @@
 package com.kodilla.ships.logicmachine;
 
-import com.kodilla.ships.AiSquare;
-import com.kodilla.ships.SingleSquare;
-import javafx.scene.paint.Color;
+import com.kodilla.ships.SingleSquare.AiSquare;
+import com.kodilla.ships.SingleSquare.PlayerSquare;
 
 import java.util.List;
 import java.util.Random;
@@ -10,10 +9,10 @@ import java.util.Random;
 public class AiProceduresMachine {
     private final int[] SHIPS_EXPECTED_QUANTITY;
     private final int[] floatingPlayerShips;
-    private final List<List<SingleSquare>> PLAYER_SQUARES_2D_LIST;
+    private final List<List<PlayerSquare>> PLAYER_SQUARES_2D_LIST;
     private final List<List<AiSquare>> AI_SQUARES_2D_LIST;
 
-    public AiProceduresMachine(int[] shipsExpectedQuantity, List<List<SingleSquare>> playerSquares2DList, List<List<AiSquare>> aiSquares2DList) {
+    public AiProceduresMachine(int[] shipsExpectedQuantity, List<List<PlayerSquare>> playerSquares2DList, List<List<AiSquare>> aiSquares2DList) {
         this.SHIPS_EXPECTED_QUANTITY = shipsExpectedQuantity;
         this.PLAYER_SQUARES_2D_LIST = playerSquares2DList;
         this.AI_SQUARES_2D_LIST = aiSquares2DList;

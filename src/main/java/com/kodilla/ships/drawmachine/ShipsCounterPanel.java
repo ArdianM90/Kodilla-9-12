@@ -1,5 +1,6 @@
 package com.kodilla.ships.drawmachine;
 
+import com.kodilla.ships.logicmachine.ShipsCounterPanelDto;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -65,13 +66,35 @@ public class ShipsCounterPanel {
         return vbox;
     }
 
-    public void updateShipsCounter(int[] actualShips) {
+//    public void updateCounter(int[] actualShips) {
+//        boolean allShipsArePlaced = true;
+//        for (int i = 0; i < playerShipsActualQuantity.length; i++) {
+//            String newText = shipLabelsArray[i].getText().substring(0, shipLabelsArray[i].getText().length()-3)+actualShips[i]+"/"+shipLabelsArray[i].getText().charAt(shipLabelsArray[i].getText().length()-1);
+//            shipLabelsArray[i].setText(newText);
+//            int shipExpectedAmount = Integer.parseInt(shipLabelsArray[i].getText().substring(shipLabelsArray[i].getText().length()-1));
+//            if (actualShips[i] == shipExpectedAmount) {
+//                shipLabelsArray[i].setStyle(labelStyleBlack);
+//            } else {
+//                shipLabelsArray[i].setStyle(labelStyleRed);
+//                allShipsArePlaced = false;
+//            }
+//        }
+//        if (allShipsArePlaced) {
+//            playButton.setStyle(buttonStyleGreen);
+//            infoLabel.setText("Naciśnij PLAY aby rozpocząć grę");
+//        } else {
+//            playButton.setStyle(buttonStyleRed);
+//            infoLabel.setText("Umieść swoje statki na planszy");
+//        }
+//    }
+
+    public void updateCounterPanel(ShipsCounterPanelDto entryDto) {
         boolean allShipsArePlaced = true;
         for (int i = 0; i < playerShipsActualQuantity.length; i++) {
-            String newText = shipLabelsArray[i].getText().substring(0, shipLabelsArray[i].getText().length()-3)+actualShips[i]+"/"+shipLabelsArray[i].getText().charAt(shipLabelsArray[i].getText().length()-1);
+            String newText = shipLabelsArray[i].getText().substring(0, shipLabelsArray[i].getText().length()-3)+entryDto.getPlayerShipsQuantity()[i]+"/"+shipLabelsArray[i].getText().charAt(shipLabelsArray[i].getText().length()-1);
             shipLabelsArray[i].setText(newText);
             int shipExpectedAmount = Integer.parseInt(shipLabelsArray[i].getText().substring(shipLabelsArray[i].getText().length()-1));
-            if (actualShips[i] == shipExpectedAmount) {
+            if (entryDto.getPlayerShipsQuantity()[i] == shipExpectedAmount) {
                 shipLabelsArray[i].setStyle(labelStyleBlack);
             } else {
                 shipLabelsArray[i].setStyle(labelStyleRed);

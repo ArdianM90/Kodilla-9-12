@@ -1,13 +1,12 @@
 package com.kodilla.ships.logicmachine;
 
-import com.kodilla.ships.SingleSquare;
-import javafx.scene.paint.Color;
+import com.kodilla.ships.SingleSquare.PlayerSquare;
 
 import java.util.List;
 import java.util.Random;
 
 public class FiringComputer {
-    private List<List<SingleSquare>> playerSquares2DList;
+    private List<List<PlayerSquare>> playerSquares2DList;
     private int[] floatingPlayerShipsQuantity;
     private final int MAX_X;
     private final int MAX_Y;
@@ -17,7 +16,7 @@ public class FiringComputer {
     private int prevAccurShotY = -1; //wartość -1 oznacza, że nie był oddawany jeszcze strzał
     private boolean prevShotWasAccurate = false;
 
-    public FiringComputer(int[] SHIPS_QUANTITY, List<List<SingleSquare>> playerSquares2DList) {
+    public FiringComputer(int[] SHIPS_QUANTITY, List<List<PlayerSquare>> playerSquares2DList) {
         this.playerSquares2DList = playerSquares2DList;
         this.floatingPlayerShipsQuantity = SHIPS_QUANTITY;
         MAX_X = playerSquares2DList.size() - 1;
@@ -66,8 +65,8 @@ public class FiringComputer {
                 } else {
                     return blindShoot();
                 }
-                SingleSquare playerSquare = playerSquares2DList.get(x).get(y);
-                if (playerSquare.getColor().equals(Color.RED)) {
+                PlayerSquare playerSquare = playerSquares2DList.get(x).get(y);
+                if (playerSquare.isShip()) {
                     prevAccurShotX = x;
                     prevAccurShotY = y;
                     prevShotWasAccurate = true;
@@ -130,9 +129,10 @@ public class FiringComputer {
         }
         System.out.println("COUNTER wynosi: "+counter);
         if (x + 1 < playerSquares2DList.size()) { //probuje strzelic po prawej
-            SingleSquare targetSquare = playerSquares2DList.get(x + 1).get(y);
+            System.out.println("Probuje strzelic po prawej");
+            PlayerSquare targetSquare = playerSquares2DList.get(x + 1).get(y);
             if (!targetSquare.isHit()) {
-                if (targetSquare.getColor().equals(Color.RED)) {
+                if (targetSquare.isShip()) {
                     prevAccurShotX = x + 1;
                     prevAccurShotY = y;
                     prevShotWasAccurate = true;
@@ -147,9 +147,10 @@ public class FiringComputer {
             }
         }
         if (x - counter >= 0) { //probuje strzelic po lewej
-            SingleSquare targetSquare = playerSquares2DList.get(x - counter).get(y);
+            System.out.println("Probuje strzelic po lewej");
+            PlayerSquare targetSquare = playerSquares2DList.get(x - counter).get(y);
             if (!targetSquare.isHit()) {
-                if (targetSquare.getColor().equals(Color.RED)) {
+                if (targetSquare.isShip()) {
                     prevAccurShotX = x - counter;
                     prevAccurShotY = y;
                     prevShotWasAccurate = true;
@@ -211,9 +212,10 @@ public class FiringComputer {
         }
         System.out.println("COUNTER wynosi: "+counter);
         if (y+1 < playerSquares2DList.get(x).size()) { //probuje strzelic nizej
-            SingleSquare targetSquare = playerSquares2DList.get(x).get(y+1);
+            System.out.println("Probuje strzelic nizej");
+            PlayerSquare targetSquare = playerSquares2DList.get(x).get(y+1);
             if (!targetSquare.isHit()) {
-                if (targetSquare.getColor().equals(Color.RED)) {
+                if (targetSquare.isShip()) {
                     prevAccurShotX = x;
                     prevAccurShotY = y + 1;
                     prevShotWasAccurate = true;
@@ -228,9 +230,10 @@ public class FiringComputer {
             }
         }
         if (y-counter >= 0) { //probuje strzelic wyzej
-            SingleSquare targetSquare = playerSquares2DList.get(x).get(y-counter);
+            System.out.println("Probuje strzelic wyzej");
+            PlayerSquare targetSquare = playerSquares2DList.get(x).get(y-counter);
             if (!targetSquare.isHit()) {
-                if (targetSquare.getColor().equals(Color.RED)) {
+                if (targetSquare.isShip()) {
                     prevAccurShotX = x;
                     prevAccurShotY = y-counter;
                     prevShotWasAccurate = true;
@@ -279,7 +282,7 @@ public class FiringComputer {
 
     private boolean squareIsRedAndShot(int x, int y) {
         if (x >= 0 && x < playerSquares2DList.size() && y >= 0 && y < playerSquares2DList.get(0).size()) {
-            return playerSquares2DList.get(x).get(y).getColor().equals(Color.RED) && playerSquares2DList.get(x).get(y).isHit();
+            return playerSquares2DList.get(x).get(y).isShip() && playerSquares2DList.get(x).get(y).isHit();
         } else {
             return false;
         }
@@ -293,13 +296,15 @@ public class FiringComputer {
             prevShotY = rnd.nextInt(MAX_Y);
             noNeedToShootHere = hasRedAndShotAround(prevShotX, prevShotY) || playerSquares2DList.get(prevShotX).get(prevShotY).isHit();
         }
-        SingleSquare playerSquare = playerSquares2DList.get(prevShotX).get(prevShotY);
-        if (playerSquare.getColor().equals(Color.RED)) {
+        PlayerSquare playerSquare = playerSquares2DList.get(prevShotX).get(prevShotY);
+        if (playerSquare.isShip()) {
+            System.out.println("PlayerSquare x: "+prevShotX+", y: "+prevShotY+" - IS SHIP");
             prevAccurShotX = prevShotX;
             prevAccurShotY = prevShotY;
             playerSquare.cross();
             prevShotWasAccurate = true;
         } else {
+            System.out.println("PlayerSquare x: "+prevShotX+", y: "+prevShotY+" - IS NO SHIP");
             playerSquare.setColorBlack();
             prevShotWasAccurate = false;
         }

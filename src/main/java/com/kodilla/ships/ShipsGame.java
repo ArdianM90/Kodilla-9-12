@@ -1,5 +1,7 @@
 package com.kodilla.ships;
 
+import com.kodilla.ships.SingleSquare.AiSquare;
+import com.kodilla.ships.SingleSquare.PlayerSquare;
 import com.kodilla.ships.drawmachine.DrawMachine;
 import com.kodilla.ships.drawmachine.ShipsCounterPanel;
 
@@ -21,11 +23,15 @@ public class ShipsGame extends Application {
     private final int RECTS_IN_ROW;
     private final int RECTS_IN_COLUMN;
     private final int[] SHIPS_QUANTITY;
-    private List<List<SingleSquare>> playerSquares2DList;
+    private List<List<PlayerSquare>> playerSquares2DList;
     private List<List<AiSquare>> aiSquares2DList;
     private AiProceduresMachine aiMachine;
     private int playerFloatingSquares;
     private int aiFloatingSquares;
+    private DrawMachine drawMachine;
+    private ShipsCounterPanel shipsCounterPanel;
+    private MarkedShipsCounter markedShipsCounter;
+    private UserInterface userInterface;
 
     public ShipsGame() {
         this.RECTS_IN_ROW = 10;
@@ -35,8 +41,8 @@ public class ShipsGame extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DrawMachine drawMachine = new DrawMachine(RECTS_IN_ROW, RECTS_IN_COLUMN);
-        ShipsCounterPanel shipsCounterPanel = new ShipsCounterPanel(SHIPS_QUANTITY);
+        drawMachine = new DrawMachine(RECTS_IN_ROW, RECTS_IN_COLUMN);
+        shipsCounterPanel = new ShipsCounterPanel(SHIPS_QUANTITY);
         BorderPane myPane = new BorderPane();
         myPane.setLeft(shipsCounterPanel.draw());
         myPane.setCenter(drawMachine.boards());
@@ -46,18 +52,27 @@ public class ShipsGame extends Application {
         primaryStage.show();
         playerSquares2DList = drawMachine.getPlayerSquares2DList();
         aiSquares2DList = drawMachine.getAiSquares2DList();
-        UserInterface userInterface = new UserInterface();
-        MarkedShipsCounter markedShipsCounter = new MarkedShipsCounter(playerSquares2DList);
+        markedShipsCounter = new MarkedShipsCounter(playerSquares2DList, SHIPS_QUANTITY);
+        userInterface = new UserInterface(markedShipsCounter);
         for (int i = 0; i < RECTS_IN_ROW; i++) {
             for (int j = 0; j < RECTS_IN_COLUMN; j++) {
-                SingleSquare playerSquare = playerSquares2DList.get(i).get(j);
+                PlayerSquare playerSquare = playerSquares2DList.get(i).get(j);
                 playerSquare.getSquare().setOnMouseClicked(event -> {
                     userInterface.markMyShip(playerSquare);
-                    shipsCounterPanel.updateShipsCounter(markedShipsCounter.countMarkedShips());
+                    //=============================
+                    //TEST
+                    for (int x = 0; x < playerSquares2DList.size(); x++) {
+                        for (int y = 0; y < playerSquares2DList.get(x).size(); y++) {
+                            playerSquares2DList.get(x).get(y).TestNumberLabel();
+                        }
+                    }
+                    //=============================
+                    //shipsCounterPanel.updateCounter(markedShipsCounter.countMarkedShips());
+                    shipsCounterPanel.updateCounterPanel(markedShipsCounter.countAndGroupMarkedSquares());
+                    markedShipsCounter.countAndGroupMarkedSquares();
                 });
             }
         }
-
         aiMachine = new AiProceduresMachine(SHIPS_QUANTITY, playerSquares2DList, aiSquares2DList);
         aiMachine.setAiShips();
         shipsCounterPanel.getPlayButton().setOnMouseClicked(event -> {
@@ -72,7 +87,7 @@ public class ShipsGame extends Application {
     private void playTheGame() {
         playerFloatingSquares = 20;
         aiFloatingSquares = 20;
-        UserInterface userInterface = new UserInterface();
+
         FiringComputer firingMachine = new FiringComputer(SHIPS_QUANTITY, playerSquares2DList);
         Alert whoFirstInfo = new Alert(Alert.AlertType.INFORMATION);
         Random rnd = new Random();
