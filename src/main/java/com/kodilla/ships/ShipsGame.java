@@ -69,7 +69,7 @@ public class ShipsGame extends Application {
                     //=============================
                     //shipsCounterPanel.updateCounter(markedShipsCounter.countMarkedShips());
                     shipsCounterPanel.updateCounterPanel(markedShipsCounter.countAndGroupMarkedSquares());
-                    markedShipsCounter.countAndGroupMarkedSquares();
+                    //markedShipsCounter.countAndGroupMarkedSquares();
                 });
             }
         }

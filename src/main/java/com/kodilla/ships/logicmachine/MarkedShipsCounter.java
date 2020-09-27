@@ -254,12 +254,14 @@ public class MarkedShipsCounter {
             redSquaresQuantity += group.size();
             if (haveNoNeighboursDiagonally(group)
                     && !(hasMultipleRedsInRow(group) && hasMultipleRedsInColumn(group))) {
-                if (group.size() <= EXPECTED_SHIPS_QUANTITY[EXPECTED_SHIPS_QUANTITY.length-1]) {
-                    settedShipsQuantity[group.size()-1] += 1;
+                if (group.size() <= EXPECTED_SHIPS_QUANTITY.length) {
+                    settedShipsQuantity[group.size()-1] = settedShipsQuantity[group.size()-1]+1;
                 }
 
             }
         }
+        System.out.println(Arrays.toString(settedShipsQuantity));
+        System.out.println();
         return new ShipsCounterPanelDto(redSquaresQuantity, settedShipsQuantity);
     }
 
