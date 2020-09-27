@@ -8,15 +8,11 @@ import java.util.Random;
 
 public class AiProceduresMachine {
     private final int[] SHIPS_EXPECTED_QUANTITY;
-    private final int[] floatingPlayerShips;
-    private final List<List<PlayerSquare>> PLAYER_SQUARES_2D_LIST;
     private final List<List<AiSquare>> AI_SQUARES_2D_LIST;
 
     public AiProceduresMachine(int[] shipsExpectedQuantity, List<List<PlayerSquare>> playerSquares2DList, List<List<AiSquare>> aiSquares2DList) {
         this.SHIPS_EXPECTED_QUANTITY = shipsExpectedQuantity;
-        this.PLAYER_SQUARES_2D_LIST = playerSquares2DList;
         this.AI_SQUARES_2D_LIST = aiSquares2DList;
-        floatingPlayerShips = SHIPS_EXPECTED_QUANTITY;
     }
 
     public void setAiShips() {
@@ -41,7 +37,6 @@ public class AiProceduresMachine {
         Random rnd = new Random();
         int grid = -1;
         boolean gridIsNotCorrect = true;
-
         while (gridIsNotCorrect) {
             if (xGrid == -1) { //-1 oznacza ze losowana jest wsp. X
                 grid = rnd.nextInt(AI_SQUARES_2D_LIST.size());

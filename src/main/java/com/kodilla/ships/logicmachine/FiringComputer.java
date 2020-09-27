@@ -10,10 +10,10 @@ public class FiringComputer {
     private int[] floatingPlayerShipsQuantity;
     private final int MAX_X;
     private final int MAX_Y;
-    private int prevShotX = -1; //wartość -1 oznacza, że nie był oddawany jeszcze strzał
-    private int prevShotY = -1; //wartość -1 oznacza, że nie był oddawany jeszcze strzał
-    private int prevAccurShotX = -1; //wartość -1 oznacza, że nie był oddawany jeszcze strzał
-    private int prevAccurShotY = -1; //wartość -1 oznacza, że nie był oddawany jeszcze strzał
+    private int prevShotX = -1;
+    private int prevShotY = -1;
+    private int prevAccurShotX = -1;
+    private int prevAccurShotY = -1;
     private boolean prevShotWasAccurate = false;
 
     public FiringComputer(int[] SHIPS_QUANTITY, List<List<PlayerSquare>> playerSquares2DList) {

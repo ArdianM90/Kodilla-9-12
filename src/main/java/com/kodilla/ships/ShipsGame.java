@@ -61,26 +61,21 @@ public class ShipsGame extends Application {
                     userInterface.markMyShip(playerSquare);
                     //=============================
                     //TEST
-                    for (int x = 0; x < playerSquares2DList.size(); x++) {
-                        for (int y = 0; y < playerSquares2DList.get(x).size(); y++) {
-                            playerSquares2DList.get(x).get(y).TestNumberLabel();
-                        }
-                    }
+//                    for (int x = 0; x < playerSquares2DList.size(); x++) {
+//                        for (int y = 0; y < playerSquares2DList.get(x).size(); y++) {
+//                            playerSquares2DList.get(x).get(y).TestNumberLabel();
+//                        }
+//                    }
                     //=============================
-                    //shipsCounterPanel.updateCounter(markedShipsCounter.countMarkedShips());
                     shipsCounterPanel.updateCounterPanel(markedShipsCounter.countAndGroupMarkedSquares());
-                    //markedShipsCounter.countAndGroupMarkedSquares();
                 });
             }
         }
         aiMachine = new AiProceduresMachine(SHIPS_QUANTITY, playerSquares2DList, aiSquares2DList);
         aiMachine.setAiShips();
         shipsCounterPanel.getPlayButton().setOnMouseClicked(event -> {
-            if (shipsCounterPanel.getPlayButton().getTextFill().equals(Color.GREEN)) {
+            if (shipsCounterPanel.getPlayButton().getTextFill().equals(Color.GREEN))
                 playTheGame();
-            } else {
-                System.out.println("Nie mozemy jeszcze grac :(\nUstaw statki.");
-            }
         });
     }
 

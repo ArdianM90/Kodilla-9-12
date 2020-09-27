@@ -16,7 +16,7 @@ public class PlayerSquare implements SingleSquare {
     private Map<SquareKey, PlayerSquare> myNeighboursList;
     //=============================
     //TEST
-    private Text infoLabel = new Text();
+//    private Text infoLabel = new Text();
     //=============================
 
     public PlayerSquare(int width, int height) {
@@ -27,9 +27,9 @@ public class PlayerSquare implements SingleSquare {
         STACK_PANE.getChildren().add(SQUARE);
         //=============================
         //TEST
-        infoLabel.setText(Integer.toString(myNeighboursList.size()));
-        infoLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 40; -fx-fill: black");
-        STACK_PANE.getChildren().add(infoLabel);
+//        infoLabel.setText(Integer.toString(myNeighboursList.size()));
+//        infoLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 40; -fx-fill: black");
+//        STACK_PANE.getChildren().add(infoLabel);
         //=============================
     }
 
@@ -59,10 +59,7 @@ public class PlayerSquare implements SingleSquare {
     }
 
     public void removeNeighbour(int neighbourX, int neighbourY) {
-        System.out.println("Przed odjęciem rozmiar wynosi "+myNeighboursList.size());
-        myNeighboursList.remove(neighbourX+"-"+neighbourY);
-        System.out.println("Po odjęciu rozmiar wynosi "+myNeighboursList.size());
-        System.out.println();
+        myNeighboursList.remove(new SquareKey(neighbourX, neighbourY));
     }
 
     public void setShip() {
@@ -92,8 +89,8 @@ public class PlayerSquare implements SingleSquare {
 
     //=============================
     //TEST
-    public void TestNumberLabel() {
-        infoLabel.setText(Integer.toString(myNeighboursList.size()));
-    }
+//    public void TestNumberLabel() {
+//        infoLabel.setText(Integer.toString(myNeighboursList.size()));
+//    }
     //=============================
 }
